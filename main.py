@@ -34,7 +34,7 @@ for thoth_work in thoth_works:
     # insert statement for 'instance of book'
     prop = property_values['instance_of'] # property
     obj = 'Q131598' # object entity
-    #response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    #response = wikidata.write_statement_object(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'title'
     prop = property_values['title'] # property
@@ -49,7 +49,7 @@ for thoth_work in thoth_works:
     # insert statement for 'copyright license'
     prop = property_values['copyright_license'] # property
     obj = 'Q208934' # object entity
-    response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    #response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'DOI'
     prop = property_values['doi'] # property

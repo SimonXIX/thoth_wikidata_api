@@ -100,9 +100,9 @@ def create_entity(api_url, edit_token, data_string):
         data = r.json()
         return data["entity"]["id"]
 
-# function for writing statements linking to existing Q items in Wikidata
+# function for writing statements linking to existing Q objects in Wikidata
 # pass in the local names including the initial letter as strings, e.g. ('Q3345', 'P6', 'Q1917')
-def write_statement_item(api_url, edit_token, subjectQNumber, propertyPNumber, objectQNumber):
+def write_statement_object(api_url, edit_token, subjectQNumber, propertyPNumber, objectQNumber):
     strippedQNumber = objectQNumber[1:len(objectQNumber)] # remove initial "Q" from object string
     parameters = {
         'action':'wbcreateclaim',
