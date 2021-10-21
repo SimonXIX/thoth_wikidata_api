@@ -41,7 +41,8 @@ def get_thoth_works():
 # turn a work from Thoth into a JSON string suitable for submitting to the Wikidata API
 def parse_thoth_work(work):
     label_list = [
-        {'language': 'en', 'string': work['fullTitle']}
+        {'language': 'en', 'string': work['fullTitle']},
+        {'language': 'en-gb', 'string': work['fullTitle']}
     ]
     # note that descriptions on Wikidata must be no more than 250 characters long
     description_list = [

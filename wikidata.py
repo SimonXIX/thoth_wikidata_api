@@ -68,9 +68,9 @@ def authenticate(path):
     # The response looks like this:
     # {'batchcomplete': '', 'query': {'tokens': {'csrftoken': '6bc490bb0d2e78cb3f8a2b94e8159da85cdc2484+\\'}}}
     CSRF_token = data['query']['tokens']['csrftoken']
-    return [CSRF_token, api_url]
+    return [api_url, CSRF_token]
 
-def create_entity(edit_token, api_url, data_string):
+def create_entity(api_url, edit_token, data_string):
 
     parameters = {
         'action': 'wbeditentity',
@@ -90,7 +90,7 @@ def create_entity(edit_token, api_url, data_string):
         return data["entity"]["id"]
 
 # pass in the local names including the initial letter as strings, e.g. ('Q3345', 'P6', 'Q1917')
-def write_statement(edit_token, api_url, subjectQNumber, propertyPNumber, objectQNumber):
+def write_statement(api_url, edit_token, subjectQNumber, propertyPNumber, objectQNumber):
     strippedQNumber = objectQNumber[1:len(objectQNumber)] # remove initial "Q" from object string
     parameters = {
         'action':'wbcreateclaim',
@@ -103,6 +103,18 @@ def write_statement(edit_token, api_url, subjectQNumber, propertyPNumber, object
         # note: the value is a string, not an actual data structure.  I think it will get URL encoded by requests before posting
         'value':'{"entity-type":"item","numeric-id":' + strippedQNumber+ '}'
     }
+    r = session.post(api_url, data=parameters)
+    data = r.json()
+    return data
+
+# testing deletion function: unclear to me whether Wikidata entities can be deleted through the API or not
+def delete_entity(api_url, edit_token, entity_id):
+    parameters = dict(
+        action='delete',
+        token=edit_token,
+        title=entity_id,
+        reason='Testing purposes'
+    )
     r = session.post(api_url, data=parameters)
     data = r.json()
     return data
