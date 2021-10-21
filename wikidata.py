@@ -100,8 +100,9 @@ def create_entity(api_url, edit_token, data_string):
         data = r.json()
         return data["entity"]["id"]
 
+# function for writing statements linking to existing Q items in Wikidata
 # pass in the local names including the initial letter as strings, e.g. ('Q3345', 'P6', 'Q1917')
-def write_statement(api_url, edit_token, subjectQNumber, propertyPNumber, objectQNumber):
+def write_statement_item(api_url, edit_token, subjectQNumber, propertyPNumber, objectQNumber):
     strippedQNumber = objectQNumber[1:len(objectQNumber)] # remove initial "Q" from object string
     parameters = {
         'action':'wbcreateclaim',
@@ -113,6 +114,23 @@ def write_statement(api_url, edit_token, subjectQNumber, propertyPNumber, object
         'property': propertyPNumber,
         # note: the value is a string, not an actual data structure.  I think it will get URL encoded by requests before posting
         'value':'{"entity-type":"item","numeric-id":' + strippedQNumber+ '}'
+    }
+    r = session.post(api_url, data=parameters)
+    data = r.json()
+    return data
+
+# function for writing statements where the value is only a string
+# pass in the local names including the initial letter as strings, e.g. ('Q3345', 'P6', 'Q1917')
+def write_statement_string(api_url, edit_token, subjectQNumber, propertyPNumber, string):
+    parameters = {
+        'action':'wbcreateclaim',
+        'format':'json',
+        'entity':subjectQNumber,
+        'snaktype':'value',
+        'bot':'1',  # not sure that this actually does anything
+        'token': edit_token,
+        'property': propertyPNumber,
+        'value': '"' + string + '"'
     }
     r = session.post(api_url, data=parameters)
     data = r.json()
