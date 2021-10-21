@@ -27,12 +27,12 @@ for property, values in claims.items():
     for value in values:
         try:
             # print Q ID if the value is an item
-            print('value: ', value['mainsnak']['datavalue']['value']['id'])
+            print('item value: ', value['mainsnak']['datavalue']['value']['id'])
         except:
             try:
                 # print the string value if the value is a literal
-                print('value: ', value['mainsnak']['datavalue']['value'])
+                print('literal value: ', value['mainsnak']['datavalue']['value'])
             except:
                 # print the whole snak if the value is something else
-                print('value: ', value['mainsnak'])
+                print('other value: ', value['mainsnak'])
     print()

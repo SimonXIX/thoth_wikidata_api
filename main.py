@@ -34,17 +34,17 @@ for thoth_work in thoth_works:
     # insert statement for 'instance of book'
     prop = property_values['instance_of'] # property
     obj = 'Q131598' # object entity
-    #response = wikidata.write_statement_object(api_url, CSRF_token, sub, prop, obj)
+    #response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'title'
     prop = property_values['title'] # property
     string = thoth_work['fullTitle'] # value string
-    #response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+    #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'publication date'
     prop = property_values['publication_date'] # property
     string = thoth_work['publicationDate'] # value string
-    #response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+    #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'copyright license'
     prop = property_values['copyright_license'] # property
@@ -54,7 +54,7 @@ for thoth_work in thoth_works:
     # insert statement for 'DOI'
     prop = property_values['doi'] # property
     string = thoth_work['doi'].replace("https://doi.org/","") # value string
-    #response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+    #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
 
     #response = wikidata.delete_entity(api_url, CSRF_token, 'Q222821')
 
