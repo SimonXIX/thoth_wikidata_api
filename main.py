@@ -12,6 +12,7 @@
 import requests
 import thoth
 import wikidata
+import json
 
 thoth_works = thoth.get_thoth_works()
 
@@ -43,7 +44,15 @@ for thoth_work in thoth_works:
 
     # insert statement for 'publication date'
     prop = property_values['publication_date'] # property
-    string = thoth_work['publicationDate'] # value string
+    publication_date_dict = dict(
+        time="+" + thoth_work['publicationDate'] + "T00:00:00Z",
+        timezone=0,
+        before=0,
+        after=0,
+        precision=11,
+        calendarmodel='http://www.wikidata.org/entity/Q1985727'
+    )
+    string = json.dumps(publication_date_dict)
     #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'copyright license'
