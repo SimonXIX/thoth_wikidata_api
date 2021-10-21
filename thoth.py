@@ -1,3 +1,12 @@
+# @name: thoth.py
+# @version: 0.1
+# @creation_date: 2021-10-21
+# @license: The MIT License <https://opensource.org/licenses/MIT>
+# @author: Simon Bowie <ad7588@coventry.ac.uk>
+# @purpose: Performs functions against the Thoth API
+# @acknowledgements:
+# Thoth API client: https://github.com/thoth-pub/thoth-client
+
 import requests
 import json
 from thothlibrary import ThothClient

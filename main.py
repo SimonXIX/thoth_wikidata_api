@@ -1,3 +1,14 @@
+# @name: main.py
+# @version: 0.1
+# @creation_date: 2021-10-21
+# @license: The MIT License <https://opensource.org/licenses/MIT>
+# @author: Simon Bowie <ad7588@coventry.ac.uk>
+# @purpose: Retrieves a Thoth work and creates a Wikidata entry from that metadata
+# @acknowledgements:
+# Wikidata API Sandbox: https://www.wikidata.org/wiki/Special:ApiSandbox
+# Wikibase authentication code: https://github.com/HeardLibrary/digital-scholarship/blob/master/code/wikibase/api/write-statements.py
+# Thoth API client: https://github.com/thoth-pub/thoth-client
+
 import requests
 import thoth
 import wikidata
