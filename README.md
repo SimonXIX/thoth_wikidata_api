@@ -1,1 +1,1 @@
-# thoth_wikidata_api
+# thoth_wikidata_integration
