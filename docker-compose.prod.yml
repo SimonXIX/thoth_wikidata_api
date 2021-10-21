@@ -6,6 +6,6 @@ services:
     volumes:
       - ./:/home/app_user
     env_file:
-      - config.env.dev
+      - config.env.prod
     stdin_open: true
     tty: true

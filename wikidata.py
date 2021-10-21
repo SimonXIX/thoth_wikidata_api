@@ -10,25 +10,36 @@
 
 import requests
 import json
+import os
 
 # Global variables
 resource_url = '/w/api.php'
 # Instantiate session outside of any function so that it's globally accessible.
 session = requests.Session()
 
-def get_url(path):
-    with open(path, 'rt') as fileObject:
-        lineList = fileObject.read().split('\n')
-    endpoint_url = lineList[0].split('=')[1]
+def get_url():
+    endpoint_url = os.environ.get('wikidata_url')
     api_url = endpoint_url + resource_url
     return api_url
 
-def authenticate(path):
-    with open(path, 'rt') as fileObject:
-        lineList = fileObject.read().split('\n')
-    endpoint_url = lineList[0].split('=')[1]
-    username = lineList[1].split('=')[1]
-    password = lineList[2].split('=')[1]
+def get_property_values():
+    # get Wikidata property variables from OS environment variables: set in env file passed through Docker Compose
+    property_values = dict(
+        instance_of=os.environ.get('instance_of'),
+        title=os.environ.get('title'),
+        author=os.environ.get('author'),
+        publication_date=os.environ.get('publication_date'),
+        copyright_license=os.environ.get('copyright_license'),
+        copyright_status=os.environ.get('copyright_status'),
+        doi=os.environ.get('doi'),
+        isbn_13=os.environ.get('isbn_13')
+    )
+    return property_values
+
+def authenticate():
+    endpoint_url = os.environ.get('wikidata_url')
+    username = os.environ.get('username')
+    password = os.environ.get('password')
     api_url = endpoint_url + resource_url
 
     # Request for token for data-modifying actions
