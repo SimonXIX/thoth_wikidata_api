@@ -16,7 +16,7 @@ def get_thoth_works():
 
     parameters = dict(
         limit=1,
-        offset=2,
+        offset=0,
         filter=''
     )
 
@@ -46,7 +46,8 @@ def parse_thoth_work(work):
     ]
     # note that descriptions on Wikidata must be no more than 250 characters long
     description_list = [
-        {'language': 'en', 'string': 'Punctum Books work'}
+        {'language': 'en', 'string': 'Work from Thoth'},
+        {'language': 'en-gb', 'string': 'Work from Thoth'}
     ]
 
     # the data passed to the Wikidata API must be JSON in string form.  Because of Python's use of curly braces in format strings, it's

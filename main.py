@@ -8,71 +8,34 @@
 # Wikidata API Sandbox: https://www.wikidata.org/wiki/Special:ApiSandbox
 # Wikibase authentication code: https://github.com/HeardLibrary/digital-scholarship/blob/master/code/wikibase/api/write-statements.py
 # Thoth API client: https://github.com/thoth-pub/thoth-client
+# How Wikidata models books: https://www.wikidata.org/wiki/Wikidata:WikiProject_Books
 
 import requests
 import thoth
 import wikidata
 import json
+import work
 
 thoth_works = thoth.get_thoth_works()
 
 for thoth_work in thoth_works:
-    parsed_work = thoth.parse_thoth_work(thoth_work)
     login_info = wikidata.authenticate()
     api_url = login_info[0]
     CSRF_token = login_info[1]
 
-    # create entity for the work
-    entity_id = wikidata.create_entity(api_url, CSRF_token, parsed_work)
+    print(thoth_work)
 
-    # insert statements for the work's various properties
-    # first, get the Wikidata property values: these differ between test.wikidata.org and wikidata.org so are set in the config file passed through Docker Compose
-    property_values = wikidata.get_property_values()
+    # Books on Wikidata are modelled as works (the abstract written work comprising the text) and editions (a particular publication of a work)
+    # First we create the work as an entity
+    work_id = work.create_work(api_url, CSRF_token, thoth_work)
 
-    sub = entity_id # subject entity
+    # Then we write statements to that work entity to represent various metadata elements
+    response = work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
 
-    # insert statement for 'instance of book'
-    prop = property_values['instance_of'] # property
-    obj = 'Q131598' # object entity
-    instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    print(response)
 
-    # insert statement for 'title'
-    prop = property_values['title'] # property
-    title_dict = dict(
-        text=thoth_work['fullTitle'],
-        language='en'
-    )
-    string = json.dumps(title_dict)
-    title_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
+    # For however many editions there are, we create edition entities
+    #edition_id = editions.create_edition(api_url, CSRF_token, thoth_work, work_id)
 
-    # insert statement for 'publication date'
-    prop = property_values['publication_date'] # property
-    publication_date_dict = dict(
-        time="+" + thoth_work['publicationDate'] + "T00:00:00Z",
-        timezone=0,
-        before=0,
-        after=0,
-        precision=11,
-        calendarmodel='http://www.wikidata.org/entity/Q1985727'
-    )
-    string = json.dumps(publication_date_dict)
-    publication_date_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
-
-    # insert statement for 'copyright license'
-    prop = property_values['copyright_license'] # property
-    obj = 'Q208934' # object entity
-    license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
-
-    # insert statement for 'DOI'
-    prop = property_values['doi'] # property
-    string = thoth_work['doi'].replace("https://doi.org/","") # value string
-    doi_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
-
-    #response = wikidata.delete_entity(api_url, CSRF_token, 'Q222821')
-
-    print(entity_id)
-    print(instance_of_response)
-    print(title_response)
-    print(publication_date_response)
-    print(license_response)
-    print(doi_response)
+    # Then we write statements to that edition entity to represent various metadata elements
+    #edition.write_edition_statements(api_url, CSRF_token, thoth_work, edition_id)

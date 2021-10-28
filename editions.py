@@ -1,0 +1,64 @@
+# @name: editions.py
+# @version: 0.1
+# @creation_date: 2021-10-28
+# @license: The MIT License <https://opensource.org/licenses/MIT>
+# @author: Simon Bowie <ad7588@coventry.ac.uk>
+# @purpose: Creates an edition item in Wikidata
+# @acknowledgements:
+# Wikidata definition of an edition item: https://www.wikidata.org/wiki/Wikidata:WikiProject_Books#Edition_item_properties
+
+import thoth
+import wikidata
+import json
+
+def create_edition(api_url, CSRF_token, thoth_work, work_id):
+
+    parsed_edition = thoth.parse_thoth_edition(thoth_work)
+
+    # create entity for the edition
+    entity_id = wikidata.create_entity(api_url, CSRF_token, parsed_edition)
+
+    return entity_id
+
+def write_edition_statements(pi_url, CSRF_token, thoth_work, edition_id):
+
+    # insert statements for the work's various properties
+    # first, get the Wikidata property values: these differ between test.wikidata.org and wikidata.org so are set in the config file passed through Docker Compose
+    property_values = wikidata.get_property_values()
+
+    sub = edition_id # subject entity
+
+    # insert statement for 'instance of version, edition, or translation'
+    prop = property_values['instance_of'] # property
+    obj = 'Q3331189' # object entity
+    instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+
+    # insert statement for 'edition or translation of'
+    prop = property_values['edition_of'] # property
+    obj = work_id # object entity
+    instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+
+    # insert statement for 'publication date'
+    prop = property_values['publication_date'] # property
+    publication_date_dict = dict(
+        time="+" + thoth_work['publicationDate'] + "T00:00:00Z",
+        timezone=0,
+        before=0,
+        after=0,
+        precision=11,
+        calendarmodel='http://www.wikidata.org/entity/Q1985727'
+    )
+    string = json.dumps(publication_date_dict)
+    publication_date_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
+
+    # insert statement for 'copyright license'
+    prop = property_values['copyright_license'] # property
+    obj = 'Q208934' # object entity
+    license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+
+    # insert statement for 'DOI'
+    prop = property_values['doi'] # property
+    string = thoth_work['doi'].replace("https://doi.org/","") # value string
+    doi_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+
+    return entity_id

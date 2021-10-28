@@ -27,6 +27,7 @@ def get_property_values():
     property_values = dict(
         instance_of=os.environ.get('instance_of'),
         title=os.environ.get('title'),
+        subtitle=os.environ.get('subtitle'),
         author=os.environ.get('author'),
         publication_date=os.environ.get('publication_date'),
         copyright_license=os.environ.get('copyright_license'),
