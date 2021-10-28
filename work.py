@@ -18,6 +18,13 @@ def create_work(api_url, CSRF_token, thoth_work):
     # create entity for the work
     entity_id = wikidata.create_entity(api_url, CSRF_token, parsed_work)
 
+    # If there's already an entity object with that label and description, return the entity ID of that existing object
+    if entity_id[2:7] == 'error':
+        data = json.loads(entity_id)
+        entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+        if entity_id_search:
+            entity_id = entity_id_search.group(1)
+
     return entity_id
 
 def write_work_statements(api_url, CSRF_token, thoth_work, work_id):

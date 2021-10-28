@@ -21,21 +21,7 @@ def get_thoth_works():
     )
 
     response = thoth.query('works', parameters)
-    #for work in response:
-    #     work_data = dict(
-    #         title=work['fullTitle'],
-    #         publication_date=work['publicationDate'],
-    #         license=work['license'],
-    #         copyright_holder=work['copyrightHolder'],
-    #         doi=work['doi']
-    #     )
-    #     for contributions in work['contributions']:
-    #         contributor_type = contributions['contributionType']
-    #         work_data[contributor_type]=contributions['fullName']
-    #     for publications in work['publications']:
-    #         isbn_type = publications['publicationType']
-    #         work_data['isbn_' + isbn_type]=publications['isbn']
-    # print(work_data)
+
     return response
 
 # turn a work from Thoth into a JSON string suitable for submitting to the Wikidata API
