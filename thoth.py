@@ -16,7 +16,7 @@ def get_thoth_works():
 
     parameters = dict(
         limit=1,
-        offset=0,
+        offset=2,
         filter=''
     )
 

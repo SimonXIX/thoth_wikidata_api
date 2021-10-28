@@ -23,24 +23,27 @@ for thoth_work in thoth_works:
     CSRF_token = login_info[1]
 
     # create entity for the work
-    #entity_id = wikidata.create_entity(api_url, CSRF_token, parsed_work)
+    entity_id = wikidata.create_entity(api_url, CSRF_token, parsed_work)
 
     # insert statements for the work's various properties
     # first, get the Wikidata property values: these differ between test.wikidata.org and wikidata.org so are set in the config file passed through Docker Compose
     property_values = wikidata.get_property_values()
 
-    #sub = entity_id # subject entity
-    sub = 'Q222821' # subject entity
+    sub = entity_id # subject entity
 
     # insert statement for 'instance of book'
     prop = property_values['instance_of'] # property
     obj = 'Q131598' # object entity
-    #response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'title'
     prop = property_values['title'] # property
-    string = thoth_work['fullTitle'] # value string
-    #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
+    title_dict = dict(
+        text=thoth_work['fullTitle'],
+        language='en'
+    )
+    string = json.dumps(title_dict)
+    title_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'publication date'
     prop = property_values['publication_date'] # property
@@ -53,18 +56,23 @@ for thoth_work in thoth_works:
         calendarmodel='http://www.wikidata.org/entity/Q1985727'
     )
     string = json.dumps(publication_date_dict)
-    #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
+    publication_date_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'copyright license'
     prop = property_values['copyright_license'] # property
     obj = 'Q208934' # object entity
-    #response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'DOI'
     prop = property_values['doi'] # property
     string = thoth_work['doi'].replace("https://doi.org/","") # value string
-    #response = wikidata.write_statement_literal(api_url, CSRF_token, sub, prop, string)
+    doi_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
 
     #response = wikidata.delete_entity(api_url, CSRF_token, 'Q222821')
 
-    print(response)
+    print(entity_id)
+    print(instance_of_response)
+    print(title_response)
+    print(publication_date_response)
+    print(license_response)
+    print(doi_response)
