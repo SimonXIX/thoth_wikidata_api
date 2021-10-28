@@ -95,8 +95,7 @@ def create_entity(api_url, edit_token, data_string):
     r = session.post(api_url, data=parameters)
     response = r.text
     if response[2:7] == 'error':
-        print(response)
-        return "error"
+        return response
     else:
         data = r.json()
         return data["entity"]["id"]

@@ -15,6 +15,7 @@ import thoth
 import wikidata
 import json
 import work
+import re
 
 thoth_works = thoth.get_thoth_works()
 
@@ -23,16 +24,23 @@ for thoth_work in thoth_works:
     api_url = login_info[0]
     CSRF_token = login_info[1]
 
-    print(thoth_work)
+    #print(thoth_work)
 
     # Books on Wikidata are modelled as works (the abstract written work comprising the text) and editions (a particular publication of a work)
     # First we create the work as an entity
     work_id = work.create_work(api_url, CSRF_token, thoth_work)
 
+    # If there's already an entity object with that label and description, return the entity ID of that existing object
+    if work_id[2:7] == 'error':
+        data = json.loads(work_id)
+        entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+        if entity_id_search:
+            work_id = entity_id_search.group(1)
+
     # Then we write statements to that work entity to represent various metadata elements
     response = work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
 
-    print(response)
+    #print(response)
 
     # For however many editions there are, we create edition entities
     #edition_id = editions.create_edition(api_url, CSRF_token, thoth_work, work_id)
