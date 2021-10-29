@@ -10,17 +10,25 @@
 import thoth
 import wikidata
 import json
+import re
 
 def create_edition(api_url, CSRF_token, thoth_work, work_id, publication):
 
-    parsed_edition = thoth.parse_thoth_edition(thoth_work)
+    parsed_edition = thoth.parse_thoth_edition(thoth_work, publication)
 
     # create entity for the edition
     entity_id = wikidata.create_entity(api_url, CSRF_token, parsed_edition)
 
+    # If there's already an entity object with that label and description, return the entity ID of that existing object
+    if entity_id[2:7] == 'error':
+        data = json.loads(entity_id)
+        entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+        if entity_id_search:
+            entity_id = entity_id_search.group(1)
+
     return entity_id
 
-def write_edition_statements(pi_url, CSRF_token, thoth_work, edition_id):
+def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_id, publication):
 
     # insert statements for the work's various properties
     # first, get the Wikidata property values: these differ between test.wikidata.org and wikidata.org so are set in the config file passed through Docker Compose
@@ -56,8 +64,12 @@ def write_edition_statements(pi_url, CSRF_token, thoth_work, edition_id):
 
     # insert statement for 'number of pages'
     prop = property_values['page_count'] # property
-    string = thoth_work['pageCount'] # value string
-    page_count_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+    page_count_dict = dict(
+        amount="+" + str(thoth_work['pageCount']),
+        unit='1'
+    )
+    string = json.dumps(page_count_dict)
+    page_count_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'ISBN-13'
     prop = property_values['isbn_13'] # property
@@ -87,4 +99,4 @@ def write_edition_statements(pi_url, CSRF_token, thoth_work, edition_id):
     obj = 'Q208934' # object entity
     license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
-    return entity_id
+    return edition_id

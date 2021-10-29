@@ -15,6 +15,7 @@ import thoth
 import wikidata
 import json
 import work
+import editions
 import re
 
 thoth_works = thoth.get_thoth_works()
@@ -30,14 +31,14 @@ for thoth_work in thoth_works:
 
     # Then we write statements to that work entity to represent various metadata elements
     #response = work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
-    #work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
+    work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
 
     # For however many editions there are, we create edition entities
-    for publication in thoth_works['publications']:
+    for publication in thoth_work['publications']:
         if publication['isbn'] is not None:
             edition_id = editions.create_edition(api_url, CSRF_token, thoth_work, work_id, publication)
 
             # Then we write statements to that edition entity to represent various metadata elements
-            response = edition.write_edition_statements(api_url, CSRF_token, thoth_work, edition_id, publication)
+            response = editions.write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_id, publication)
 
-    print(response)
+            print(response)

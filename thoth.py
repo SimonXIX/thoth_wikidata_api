@@ -38,21 +38,6 @@ def parse_thoth_work(work):
 
     # the data passed to the Wikidata API must be JSON in string form.  Because of Python's use of curly braces in format strings, it's
     # best to create the data to be passed as a dictionary, then use json.dumps to convert it into string form.
-    # Here's what we are building:
-    '''
-    dataDict = {
-        "labels":{
-            "en":{"language":"en","value":"Simon Worthington"},
-            "fr":{"language":"fr","value":"Simon Worthington"},
-            "de":{"language":"de","value":"Simon Worthington"}
-            },
-        "descriptions":{
-            "en":{"language":"en","value":"Publishing technology researcher"}
-            "fr":{"language":"fr","value":"Chercheur en technologie de l'édition"},
-            "de":{"language":"de","value":"Verlagstechnologie-Forscher"}
-            }
-        }
-    '''
     dataDict = {}
 
     innerDict = {}
@@ -70,34 +55,19 @@ def parse_thoth_work(work):
     return dataString
 
 # turn an edition from Thoth into a JSON string suitable for submitting to the Wikidata API
-def parse_thoth_edition(work):
+def parse_thoth_edition(work, publication):
     label_list = [
         {'language': 'en', 'string': work['fullTitle']},
         {'language': 'en-gb', 'string': work['fullTitle']}
     ]
     # note that descriptions on Wikidata must be no more than 250 characters long
     description_list = [
-        {'language': 'en', 'string': 'Edition of work from Thoth'},
-        {'language': 'en-gb', 'string': 'Edition of work from Thoth'}
+        {'language': 'en', 'string': publication['publicationType'].capitalize() + ' edition of work from Thoth'},
+        {'language': 'en-gb', 'string': publication['publicationType'].capitalize() + ' edition of work from Thoth'}
     ]
 
     # the data passed to the Wikidata API must be JSON in string form.  Because of Python's use of curly braces in format strings, it's
     # best to create the data to be passed as a dictionary, then use json.dumps to convert it into string form.
-    # Here's what we are building:
-    '''
-    dataDict = {
-        "labels":{
-            "en":{"language":"en","value":"Simon Worthington"},
-            "fr":{"language":"fr","value":"Simon Worthington"},
-            "de":{"language":"de","value":"Simon Worthington"}
-            },
-        "descriptions":{
-            "en":{"language":"en","value":"Publishing technology researcher"}
-            "fr":{"language":"fr","value":"Chercheur en technologie de l'édition"},
-            "de":{"language":"de","value":"Verlagstechnologie-Forscher"}
-            }
-        }
-    '''
     dataDict = {}
 
     innerDict = {}

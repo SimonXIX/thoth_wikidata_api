@@ -26,16 +26,21 @@ def get_property_values():
     # get Wikidata property variables from OS environment variables: set in env file passed through Docker Compose
     property_values = dict(
         instance_of=os.environ.get('instance_of'),
+        edition_of=os.environ.get('edition_of'),
         title=os.environ.get('title'),
         subtitle=os.environ.get('subtitle'),
         author=os.environ.get('author'),
         editor=os.environ.get('editor'),
         contributor=os.environ.get('contributor'),
         publication_date=os.environ.get('publication_date'),
+        publication_place=os.environ.get('publication_place'),
+        page_count=os.environ.get('page_count'),
         copyright_license=os.environ.get('copyright_license'),
         copyright_status=os.environ.get('copyright_status'),
         doi=os.environ.get('doi'),
-        isbn_13=os.environ.get('isbn_13')
+        isbn_13=os.environ.get('isbn_13'),
+        lccn=os.environ.get('lccn'),
+        url=os.environ.get('url')
     )
     return property_values
 
