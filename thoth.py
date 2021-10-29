@@ -57,8 +57,8 @@ def parse_thoth_work(work):
 # turn an edition from Thoth into a JSON string suitable for submitting to the Wikidata API
 def parse_thoth_edition(work, publication):
     label_list = [
-        {'language': 'en', 'string': work['fullTitle']},
-        {'language': 'en-gb', 'string': work['fullTitle']}
+        {'language': 'en', 'string': work['fullTitle'] + ' (' + publication['publicationType'].lower() + ' edition)'},
+        {'language': 'en-gb', 'string': work['fullTitle'] + ' (' + publication['publicationType'].lower() + ' edition)'}
     ]
     # note that descriptions on Wikidata must be no more than 250 characters long
     description_list = [

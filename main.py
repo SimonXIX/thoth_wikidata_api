@@ -31,7 +31,9 @@ for thoth_work in thoth_works:
 
     # Then we write statements to that work entity to represent various metadata elements
     #response = work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
-    work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
+    #work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
+
+    print('Work ID: ', work_id)
 
     # For however many editions there are, we create edition entities
     for publication in thoth_work['publications']:
@@ -39,6 +41,6 @@ for thoth_work in thoth_works:
             edition_id = editions.create_edition(api_url, CSRF_token, thoth_work, work_id, publication)
 
             # Then we write statements to that edition entity to represent various metadata elements
-            response = editions.write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_id, publication)
+            editions.write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_id, publication)
 
-            print(response)
+            print('Edition ID: ', edition_id)

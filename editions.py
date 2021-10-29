@@ -46,6 +46,12 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
     obj = work_id # object entity
     instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
+    # inversely write statement to the work for 'has edition of'
+    work = work_id
+    prop = property_values['has_edition'] # property
+    edition = edition_id # object entity
+    instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, work, prop, edition)
+
     # insert statement for 'place of publication'
     prop = property_values['publication_place'] # property
 

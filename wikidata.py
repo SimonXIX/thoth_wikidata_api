@@ -27,6 +27,7 @@ def get_property_values():
     property_values = dict(
         instance_of=os.environ.get('instance_of'),
         edition_of=os.environ.get('edition_of'),
+        has_edition=os.environ.get('has_edition'),
         title=os.environ.get('title'),
         subtitle=os.environ.get('subtitle'),
         author=os.environ.get('author'),
