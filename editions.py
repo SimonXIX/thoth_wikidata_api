@@ -11,7 +11,7 @@ import thoth
 import wikidata
 import json
 
-def create_edition(api_url, CSRF_token, thoth_work, work_id):
+def create_edition(api_url, CSRF_token, thoth_work, work_id, publication):
 
     parsed_edition = thoth.parse_thoth_edition(thoth_work)
 
@@ -38,6 +38,9 @@ def write_edition_statements(pi_url, CSRF_token, thoth_work, edition_id):
     obj = work_id # object entity
     instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
+    # insert statement for 'place of publication'
+    prop = property_values['publication_place'] # property
+
     # insert statement for 'publication date'
     prop = property_values['publication_date'] # property
     publication_date_dict = dict(
@@ -51,14 +54,37 @@ def write_edition_statements(pi_url, CSRF_token, thoth_work, edition_id):
     string = json.dumps(publication_date_dict)
     publication_date_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
 
-    # insert statement for 'copyright license'
-    prop = property_values['copyright_license'] # property
-    obj = 'Q208934' # object entity
-    license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    # insert statement for 'number of pages'
+    prop = property_values['page_count'] # property
+    string = thoth_work['pageCount'] # value string
+    page_count_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+
+    # insert statement for 'ISBN-13'
+    prop = property_values['isbn_13'] # property
+    string = publication['isbn'] # value string
+    isbn_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+
+    if thoth_work['lccn'] is not None:
+        # insert statement for 'Library of Congress Control Number'
+        prop = property_values['lccn'] # property
+        string = thoth_work['lccn']
+        lccn_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+    else:
+        lccn_response = 'No LCCN'
+
+    # insert statement for 'full work available at URL'
+    prop = property_values['url'] # property
+    string = thoth_work['landingPage'] # value string
+    url_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
 
     # insert statement for 'DOI'
     prop = property_values['doi'] # property
     string = thoth_work['doi'].replace("https://doi.org/","") # value string
     doi_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+
+    # insert statement for 'copyright license'
+    prop = property_values['copyright_license'] # property
+    obj = 'Q208934' # object entity
+    license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     return entity_id

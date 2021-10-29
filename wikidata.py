@@ -29,6 +29,8 @@ def get_property_values():
         title=os.environ.get('title'),
         subtitle=os.environ.get('subtitle'),
         author=os.environ.get('author'),
+        editor=os.environ.get('editor'),
+        contributor=os.environ.get('contributor'),
         publication_date=os.environ.get('publication_date'),
         copyright_license=os.environ.get('copyright_license'),
         copyright_status=os.environ.get('copyright_status'),

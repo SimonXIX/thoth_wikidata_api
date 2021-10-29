@@ -72,12 +72,30 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
             obj = person_id
             author_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
         elif contributor['contributionType'] == 'EDITOR':
+            parsed_person = thoth.parse_person(contributor)
+            # create entity for the person
+            person_id = wikidata.create_entity(api_url, CSRF_token, parsed_person)
+            # If there's already an entity object with that label and description, return the entity ID of that existing object
+            if person_id[2:7] == 'error':
+                data = json.loads(person_id)
+                entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+                if entity_id_search:
+                    person_id = entity_id_search.group(1)
             prop = property_values['editor']
-            obj = 'Q'
-            #editor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+            obj = person_id
+            editor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
         else:
+            parsed_person = thoth.parse_person(contributor)
+            # create entity for the person
+            person_id = wikidata.create_entity(api_url, CSRF_token, parsed_person)
+            # If there's already an entity object with that label and description, return the entity ID of that existing object
+            if person_id[2:7] == 'error':
+                data = json.loads(person_id)
+                entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+                if entity_id_search:
+                    person_id = entity_id_search.group(1)
             prop = property_values['contributor']
-            obj = 'Q'
-            #contributor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+            obj = person_id
+            contributor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     return instance_of_response,title_response,subtitle_response
