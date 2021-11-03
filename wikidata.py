@@ -91,13 +91,15 @@ def authenticate():
     CSRF_token = data['query']['tokens']['csrftoken']
     return [api_url, CSRF_token]
 
+# search for an entity and return the first Q id that returns
+# NB: this feels very imprecise. there's got to be a better way to do this.
 def search_for_entity(api_url, query_string):
-    uri = api_url + '?action=wbsearchentities&format=json&search=' + urllib.parse.quote(query_string) + '&language=en'
+    uri = api_url + '?action=wbsearchentities&format=json&search=' + urllib.parse.quote(query_string) + '&language=en&type=item&limit=1'
     r = session.get(uri)
     data = r.json()
     if not len(data['search']) == 0:
-        search_results = data['search']
-        print(search_results)
+        entity_id = data['search'][0]['id']
+        return entity_id
 
 def read_entity(api_url, entity_id):
     uri = api_url + '?action=wbgetclaims&format=json&entity=' + entity_id
