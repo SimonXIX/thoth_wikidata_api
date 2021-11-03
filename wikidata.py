@@ -90,6 +90,13 @@ def authenticate():
     CSRF_token = data['query']['tokens']['csrftoken']
     return [api_url, CSRF_token]
 
+def read_entity(api_url, entity_id):
+    uri = api_url + '?action=wbgetclaims&format=json&entity=' + entity_id
+    r = requests.get(uri)
+    data = r.json()
+    claims = data['claims']
+    return claims
+
 def create_entity(api_url, edit_token, data_string):
 
     parameters = {

@@ -33,27 +33,33 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
     # first, get the Wikidata property values: these differ between test.wikidata.org and wikidata.org so are set in the config file passed through Docker Compose
     property_values = wikidata.get_property_values()
 
+    # check for existing claims on that work. we'll use this to check whether claim statements already exist for that entity or not.
+    existing_claims = wikidata.read_entity(api_url, work_id)
+
     sub = work_id # subject entity
 
     # insert statement for 'instance of written work'
-    prop = property_values['instance_of'] # property
-    obj = 'Q47461344' # object entity
-    #instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+    if property_values['instance_of'] not in existing_claims:
+        prop = property_values['instance_of'] # property
+        obj = 'Q47461344' # object entity
+        instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'title'
-    prop = property_values['title'] # property
-    title_dict = dict(
-        text=thoth_work['title'],
-        language='en'
-    )
-    string = json.dumps(title_dict)
-    #title_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
+    if property_values['title'] not in existing_claims:
+        prop = property_values['title'] # property
+        title_dict = dict(
+            text=thoth_work['title'],
+            language='en'
+        )
+        string = json.dumps(title_dict)
+        title_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
 
     if thoth_work['subtitle'] is not None:
-        # insert statement for 'subtitle'
-        prop = property_values['subtitle'] # property
-        string = thoth_work['subtitle']
-        subtitle_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+        if property_values['subtitle'] not in existing_claims:
+            # insert statement for 'subtitle'
+            prop = property_values['subtitle'] # property
+            string = thoth_work['subtitle']
+            subtitle_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
     else:
         subtitle_response = 'No subtitle'
 
@@ -68,9 +74,10 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
                 entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
                 if entity_id_search:
                     person_id = entity_id_search.group(1)
-            prop = property_values['author']
-            obj = person_id
-            author_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+            if property_values['author'] not in existing_claims:
+                prop = property_values['author']
+                obj = person_id
+                author_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
         elif contributor['contributionType'] == 'EDITOR':
             parsed_person = thoth.parse_person(contributor)
             # create entity for the person
@@ -81,9 +88,10 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
                 entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
                 if entity_id_search:
                     person_id = entity_id_search.group(1)
-            prop = property_values['editor']
-            obj = person_id
-            editor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+            if property_values['editor'] not in existing_claims:
+                prop = property_values['editor']
+                obj = person_id
+                editor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
         else:
             parsed_person = thoth.parse_person(contributor)
             # create entity for the person
@@ -94,8 +102,9 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
                 entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
                 if entity_id_search:
                     person_id = entity_id_search.group(1)
-            prop = property_values['contributor']
-            obj = person_id
-            contributor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+            if property_values['contributor'] not in existing_claims:
+                prop = property_values['contributor']
+                obj = person_id
+                contributor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
-    return instance_of_response,title_response,subtitle_response
+    return work_id
