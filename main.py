@@ -10,13 +10,10 @@
 # Thoth API client: https://github.com/thoth-pub/thoth-client
 # How Wikidata models books: https://www.wikidata.org/wiki/Wikidata:WikiProject_Books
 
-import requests
 import thoth
 import wikidata
-import json
 import work
 import editions
-import re
 
 thoth_works = thoth.get_thoth_works()
 
