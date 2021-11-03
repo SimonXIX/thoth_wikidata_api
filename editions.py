@@ -60,9 +60,12 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
     # insert statement for 'place of publication'
     if property_values['publication_place'] not in existing_claims:
         prop = property_values['publication_place'] # property
+
+        print(wikidata.search_for_entity(api_url, thoth_work['place']))
+
         string = thoth_work['place'] # value string
         publication_place_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
-        print(publication_place_response)
+        #print(publication_place_response)
 
     # insert statement for 'publication date'
     if property_values['publication_date'] not in existing_claims:

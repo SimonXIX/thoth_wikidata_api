@@ -30,7 +30,6 @@ for thoth_work in thoth_works:
     work_id = work.create_work(api_url, CSRF_token, thoth_work)
 
     # Then we write statements to that work entity to represent various metadata elements
-    #response = work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
     work.write_work_statements(api_url, CSRF_token, thoth_work, work_id)
 
     print('Work ID: ', work_id)

@@ -11,6 +11,7 @@
 import requests
 import json
 import os
+import urllib
 
 # Global variables
 resource_url = '/w/api.php'
@@ -90,15 +91,22 @@ def authenticate():
     CSRF_token = data['query']['tokens']['csrftoken']
     return [api_url, CSRF_token]
 
+def search_for_entity(api_url, query_string):
+    uri = api_url + '?action=wbsearchentities&format=json&search=' + urllib.parse.quote(query_string) + '&language=en'
+    r = session.get(uri)
+    data = r.json()
+    if not len(data['search']) == 0:
+        search_results = data['search']
+        print(search_results)
+
 def read_entity(api_url, entity_id):
     uri = api_url + '?action=wbgetclaims&format=json&entity=' + entity_id
-    r = requests.get(uri)
+    r = session.get(uri)
     data = r.json()
     claims = data['claims']
     return claims
 
 def create_entity(api_url, edit_token, data_string):
-
     parameters = {
         'action': 'wbeditentity',
         'format': 'json',
