@@ -54,6 +54,7 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
         string = json.dumps(title_dict)
         title_response = wikidata.write_statement_json(api_url, CSRF_token, sub, prop, string)
 
+    # insert statement for 'subtitle'
     if thoth_work['subtitle'] is not None:
         if property_values['subtitle'] not in existing_claims:
             # insert statement for 'subtitle'
@@ -63,6 +64,7 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
     else:
         subtitle_response = 'No subtitle'
 
+    # insert statement for 'author', 'editor', 'translator', or 'contributor'
     for contributor in thoth_work['contributions']:
         if contributor['contributionType'] == 'AUTHOR':
             parsed_person = thoth.parse_person(contributor)

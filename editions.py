@@ -67,6 +67,12 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
 
         publication_place_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
+    # insert statement for 'publisher'
+    if property_values['publisher'] not in existing_claims:
+        prop = property_values['publisher'] # property
+        string = thoth_work['publisher']
+        publisher_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+
     # insert statement for 'publication date'
     if property_values['publication_date'] not in existing_claims:
         prop = property_values['publication_date'] # property
@@ -123,5 +129,63 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
         prop = property_values['copyright_license'] # property
         obj = 'Q208934' # object entity
         license_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+
+    for contributor in thoth_work['contributions']:
+        if contributor['contributionType'] == 'AUTHOR':
+            parsed_person = thoth.parse_person(contributor)
+            # create entity for the person
+            person_id = wikidata.create_entity(api_url, CSRF_token, parsed_person)
+            # If there's already an entity object with that label and description, return the entity ID of that existing object
+            if person_id[2:7] == 'error':
+                data = json.loads(person_id)
+                entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+                if entity_id_search:
+                    person_id = entity_id_search.group(1)
+            if property_values['author'] not in existing_claims:
+                prop = property_values['author']
+                obj = person_id
+                author_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+        elif contributor['contributionType'] == 'EDITOR':
+            parsed_person = thoth.parse_person(contributor)
+            # create entity for the person
+            person_id = wikidata.create_entity(api_url, CSRF_token, parsed_person)
+            # If there's already an entity object with that label and description, return the entity ID of that existing object
+            if person_id[2:7] == 'error':
+                data = json.loads(person_id)
+                entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+                if entity_id_search:
+                    person_id = entity_id_search.group(1)
+            if property_values['editor'] not in existing_claims:
+                prop = property_values['editor']
+                obj = person_id
+                editor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+        elif contributor['contributionType'] == 'TRANSLATOR':
+            parsed_person = thoth.parse_person(contributor)
+            # create entity for the person
+            person_id = wikidata.create_entity(api_url, CSRF_token, parsed_person)
+            # If there's already an entity object with that label and description, return the entity ID of that existing object
+            if person_id[2:7] == 'error':
+                data = json.loads(person_id)
+                entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+                if entity_id_search:
+                    person_id = entity_id_search.group(1)
+            if property_values['translator'] not in existing_claims:
+                prop = property_values['translator']
+                obj = person_id
+                editor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+        else:
+            parsed_person = thoth.parse_person(contributor)
+            # create entity for the person
+            person_id = wikidata.create_entity(api_url, CSRF_token, parsed_person)
+            # If there's already an entity object with that label and description, return the entity ID of that existing object
+            if person_id[2:7] == 'error':
+                data = json.loads(person_id)
+                entity_id_search = re.search("\[\[(Q.*)\|", data["error"]["info"])
+                if entity_id_search:
+                    person_id = entity_id_search.group(1)
+            if property_values['contributor'] not in existing_claims:
+                prop = property_values['contributor']
+                obj = person_id
+                contributor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     return edition_id
