@@ -33,6 +33,9 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
     # first, get the Wikidata property values: these differ between test.wikidata.org and wikidata.org so are set in the config file passed through Docker Compose
     property_values = wikidata.get_property_values()
 
+    # get Wikidata constants such as 'written work'
+    wikidata_constants = wikidata.get_constant_entities()
+
     # check for existing claims on that work. we'll use this to check whether claim statements already exist for that entity or not.
     existing_claims = wikidata.read_entity(api_url, work_id)
 
@@ -41,7 +44,7 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
     # insert statement for 'instance of written work'
     if property_values['instance_of'] not in existing_claims:
         prop = property_values['instance_of'] # property
-        obj = 'Q47461344' # object entity
+        obj = wikidata_constants['written_work'] # object entity
         instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'title'

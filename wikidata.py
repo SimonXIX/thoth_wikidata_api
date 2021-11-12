@@ -49,6 +49,14 @@ def get_property_values():
     )
     return property_values
 
+# get Wikidata entities such as 'written work' or CC licenses
+def get_constant_entities():
+    wikidata_constants = dict(
+        written_work=os.environ.get('written_work'),
+        version=os.environ.get('version')
+    )
+    return wikidata_constants
+
 def authenticate():
     endpoint_url = os.environ.get('wikidata_url')
     username = os.environ.get('username')
