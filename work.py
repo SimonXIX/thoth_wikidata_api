@@ -109,4 +109,9 @@ def write_work_statements(api_url, CSRF_token, thoth_work, work_id):
                 obj = person_id
                 contributor_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
+    # insert statement for 'main subject'
+    for subject in thoth_work['subjects']:
+        if subject['subjectType'] == 'KEYWORD' and subject['subjectOrdinal'] == 1:
+            print(subject['subjectCode'])
+
     return work_id

@@ -69,10 +69,11 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
             publication_place_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
     # insert statement for 'publisher'
-    # if property_values['publisher'] not in existing_claims:
-    #     prop = property_values['publisher'] # property
-    #     string = thoth_work['publisher']
-    #     publisher_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+    if property_values['publisher'] not in existing_claims:
+        prop = property_values['publisher'] # property
+        string = thoth_work['imprint']['publisher']['publisherName']
+        publisher_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
+        print(publisher_response)
 
     # insert statement for 'publication date'
     if property_values['publication_date'] not in existing_claims:

@@ -35,6 +35,7 @@ def get_property_values():
         editor=os.environ.get('editor'),
         translator=os.environ.get('translator'),
         contributor=os.environ.get('contributor'),
+        main_subject=os.environ.get('main_subject'),
         publication_date=os.environ.get('publication_date'),
         publisher=os.environ.get('publisher'),
         publication_place=os.environ.get('publication_place'),
