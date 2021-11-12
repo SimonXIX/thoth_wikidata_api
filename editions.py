@@ -49,13 +49,13 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
     if property_values['edition_of'] not in existing_claims:
         prop = property_values['edition_of'] # property
         obj = work_id # object entity
-        instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
+        edition_of_response = wikidata.write_statement_item(api_url, CSRF_token, sub, prop, obj)
 
         # inversely write statement to the work for 'has edition of'
         work = work_id
         prop = property_values['has_edition'] # property
         edition = edition_id # object entity
-        #instance_of_response = wikidata.write_statement_item(api_url, CSRF_token, work, prop, edition)
+        #has_edition_response = wikidata.write_statement_item(api_url, CSRF_token, work, prop, edition)
 
     # insert statement for 'place of publication'
     if property_values['publication_place'] not in existing_claims:
@@ -73,7 +73,7 @@ def write_edition_statements(api_url, CSRF_token, thoth_work, work_id, edition_i
         prop = property_values['publisher'] # property
         string = thoth_work['imprint']['publisher']['publisherName']
         publisher_response = wikidata.write_statement_string(api_url, CSRF_token, sub, prop, string)
-        print(publisher_response)
+        #print(publisher_response)
 
     # insert statement for 'publication date'
     if property_values['publication_date'] not in existing_claims:

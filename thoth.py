@@ -14,7 +14,7 @@ from thothlibrary import ThothClient
 def get_thoth_works():
     thoth = ThothClient(version="0.4.2")
 
-    response = thoth.works(limit=2)
+    response = thoth.works(limit=1, order='{field: PUBLICATION_DATE, direction: ASC}')
 
     return response
 
