@@ -1,2 +1,2 @@
 requests
-thothlibrary==0.5.0
+thothlibrary==0.6.2

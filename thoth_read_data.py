@@ -2,14 +2,19 @@ import requests
 import json
 from thothlibrary import ThothClient
 
-thoth = ThothClient()
+thoth = ThothClient(version="0.4.2")
 
-parameters = dict(
-     limit=10,
-     offset=0,
-     filter=''
-)
+response = thoth.works(limit=1)
 
-response = thoth.query('works', parameters)
+print(json.dumps(response))
 
-print(response)
+# query = """query {
+#     works{
+#         title
+#     }
+# }"""
+#
+# url = 'https://api.thoth.pub/graphql'
+# r = requests.post(url, json={'query': query})
+# print(r.status_code)
+# print(r.text)

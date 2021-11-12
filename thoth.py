@@ -12,15 +12,9 @@ import json
 from thothlibrary import ThothClient
 
 def get_thoth_works():
-    thoth = ThothClient()
+    thoth = ThothClient(version="0.4.2")
 
-    parameters = dict(
-        limit=1,
-        offset=0,
-        filter=''
-    )
-
-    response = thoth.query('works', parameters)
+    response = thoth.works(limit=2)
 
     return response
 

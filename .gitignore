@@ -3,3 +3,4 @@ config.env.dev
 config.env.prod
 .bash_history
 .cache
+.local
