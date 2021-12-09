@@ -12,7 +12,7 @@ import json
 from thothlibrary import ThothClient
 
 def get_thoth_works():
-    thoth = ThothClient(version="0.4.2")
+    thoth = ThothClient(version="0.6.0")
 
     response = thoth.works(limit=1, order='{field: PUBLICATION_DATE, direction: ASC}')
 
