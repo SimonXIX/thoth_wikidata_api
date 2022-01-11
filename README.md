@@ -1,8 +1,10 @@
-# Integration between Thoth and wikidata
+# Integration between Thoth and Wikidata
 
 ## Summary
 
-This is code for an integration between Thoth's API through its Python client (https://github.com/thoth-pub/thoth-client) and Wikidata's MediaWiki API (https://www.wikidata.org/wiki/Wikidata:Data_access). It retrieves bibliographic data for a publication from Thoth, translates it into the quasi-FRBRised form that Wikidata uses for books (i.e. distinguishing between 'works' and 'editions' as outlined in https://www.wikidata.org/wiki/Wikidata:WikiProject_Books), and submits the data to Wikidata by creating new entities and updating data statements for those entities.
+Thoth (https://thoth.pub/) is an open metadata management and dissemination system produced as part of the COPIM project (https://copim.ac.uk/). Thoth is used for metadata management for open-access books and for metadata dissemination to digital repositories, libraries, and vendors.
+
+This code is an experimental integration between Thoth's API client (https://github.com/thoth-pub/thoth-client) and Wikidata's MediaWiki API (https://www.wikidata.org/wiki/Wikidata:Data_access) to send metadata about publications in Thoth to Wikidata. The program retrieves bibliographic data for a publication from Thoth, translates it into the quasi-FRBRised form that Wikidata uses for books (i.e. distinguishing between 'works' and 'editions' as outlined in https://www.wikidata.org/wiki/Wikidata:WikiProject_Books), and submits the data to Wikidata by creating new entities and updating data statements for those entities.
 
 ## Usage
 
