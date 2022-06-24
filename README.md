@@ -8,7 +8,7 @@ This code is an experimental integration between Thoth's API client (https://git
 
 ## Usage
 
-The main program runs from main.py with Thoth API options defined in thoth.py (i.e. limiting the API return to one publication rather than lots of publications). Run:
+The main program runs from main.py with Thoth API options defined in thoth.py (e.g. limiting the API return to one publication rather than lots of publications). Run:
 
 `docker exec -it python python main.py`
 
